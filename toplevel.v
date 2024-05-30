@@ -41,21 +41,6 @@ module toplevel(
         .button_out(reset)
     );
     
-    wire left;
-    wire right;
-    
-    debouncer move_left(
-        .button_in(l),
-        .clk(clk),
-        .button_out(left)
-    );
-    
-    debouncer move_right(
-            .button_in(r),
-            .clk(clk),
-            .button_out(right)
-        );
-    
 
 // VGA display clock interconnect
 wire dclk;
@@ -95,9 +80,36 @@ seven no_value(
       .seven_seg_display(no_val)
 );
 
+wire left;
+wire right;
+
+// Set LEFT and RIGHT based on button input
+debouncer move_left(
+    .button_in(l),
+    .clk(clk),
+    .button_out(left)
+    );
+    
+debouncer move_right(
+        .button_in(r),
+        .clk(clk),
+        .button_out(right)
+    );
+
 // Board position parameters to center the board
-parameter board_x = 320 - 32; // 640/2 - 64/2
-parameter board_y = 300 - 4;  // 480/2 - 8/2
+wire board_x = 320 - 32; // 640/2 - 64/2
+wire board_y = 300 - 4;  // 480/2 - 8/2
+
+board paddle(
+    .clk(clk),
+    .reset(reset),
+    .move_left(left),
+    .move_right(right),
+    .x_initial(board_x),    // TODO: figure out how to do input x and output x
+    .y_intiial(board_y), 
+);
+    
+
 
 
 // VGA controller
