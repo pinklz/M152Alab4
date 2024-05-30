@@ -30,3 +30,5 @@ Also need to come up with a way to write logic that adjusts the ball velocity ba
 Pause button should technically just pass a clock that never has a positive edge into the game's logic?
 
 Need to have a fixed constant for the y position of the board so the physics controller module can test for overlap/collision
+
+Board will have no acceleration, so on contact with the board, the ball is always affected by a fixed amount
