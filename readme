@@ -1,0 +1,27 @@
+BALL
+
+1. Has X and Y position
+2. Has X and Y velocity (increases with each surface contact?)
+3. Input that tells ball when it has made contact with something -> module that tracks that x and y position of objects in play, and sends a message when two things overlap
+4. Has a clock input that can be adjusted by the divider to determine the speed of the ball
+
+PADDLE/BOARD
+
+1. Has X and Y position (constant)
+2. Has some X velocity that affects the rebounding of the ball upon contact (Doesn't need to know whether it's made contact with the ball
+
+BRICKS
+
+1. Has a fixed X and Y position
+2. Has an input telling it whether the ball has made contact with it
+3. Has an output telling the display whether it is still "alive"
+
+Notes:
+
+Hve bouncing be handled by a top level module that compares the position of the paddle, the ball and the bricks on the board.
+
+For bricks, when they are hit set them to dead within the brick module. Use this to toggle their visibility within the top level module.
+
+All game props only know their own positioning as well as other essential information, such as whether they're alive for the bricks. Otherwise, should have a logic boad that controls the bounces and the boundaries. Should be something top level that processes the positioning of all the board props, and whenever it records a bounce it adjusts the velocity for each of the objects involved in the interaction.
+
+Also need to come up with a way to write logic that adjusts the ball velocity based on how the paddle moves at the time it contacts.
