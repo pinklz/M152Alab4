@@ -3,7 +3,7 @@
 module clock_divider(
 	input wire clk,		//master clock: 100MHz
 	input wire rst,		//asynchronous reset
-	output wire dclk		//pixel clock: 25MHz
+	output wire dclk,		//pixel clock: 25MHz
 
 	output wire segment_clk  // for 7-segment display	
 	);
@@ -30,7 +30,7 @@ module clock_divider(
 
 
 		/**** SEVEN SEGMENT DISPLAY ****/ 
-		if (reset == 1) begin 
+		if (rst == 1) begin 
 			segment_clock_counter <= 32'b0;
 			seg <= 1;
 		end
