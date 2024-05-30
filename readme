@@ -25,3 +25,8 @@ For bricks, when they are hit set them to dead within the brick module. Use this
 All game props only know their own positioning as well as other essential information, such as whether they're alive for the bricks. Otherwise, should have a logic boad that controls the bounces and the boundaries. Should be something top level that processes the positioning of all the board props, and whenever it records a bounce it adjusts the velocity for each of the objects involved in the interaction.
 
 Also need to come up with a way to write logic that adjusts the ball velocity based on how the paddle moves at the time it contacts.
+
+30 May
+Pause button should technically just pass a clock that never has a positive edge into the game's logic?
+
+Need to have a fixed constant for the y position of the board so the physics controller module can test for overlap/collision
