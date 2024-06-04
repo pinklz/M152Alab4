@@ -37,6 +37,8 @@ module toplevel(
 
     wire reset;
     wire paus;
+
+    wire beginning_of_game;
     
     debouncer reset_button(
         .button_in(rst),
@@ -115,14 +117,18 @@ wire [9:0] board_x_init = 320 - 32; // 640/2 - 64/2
 wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
 
 wire [9:0] board_x;
+wire start = 1;
 
 board paddle(
     .clk(clk),
     .reset(reset),
+    .start(start),
     .move_left(left),
     .move_right(right),
-    .x_initial(board_x_init),    // TODO: figure out how to do input x and output x
-    .y_initial(board_y) 
+    .x_initial(board_x_init),
+    .y_initial(board_y),
+
+    .start_out(beginning_of_game)
 );
 
 wire [9:0] ball_x;
