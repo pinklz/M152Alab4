@@ -3,23 +3,27 @@
 module bricks(
     input clk,
     input reset,
-    input [9:0] x_pos,
+    input x_pos,
     input [9:0] y_pos,
     input killBrick,
-    output isAlive,
+    output isAlive
     );
+    
+    reg alive;
 
     always@(posedge clk or posedge reset) begin
         if (reset) begin
-            isAlive <= 1;
+            alive <= 1;
         end
         else begin
             if (killBrick) begin
-                isAlive <= 0;
+                alive <= 0;
             end
             else begin
-                isAlive <= 1;
+                alive <= 1;
             end
         end
     end
+    
+    assign isAlive = alive;
 endmodule
