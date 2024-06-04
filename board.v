@@ -9,8 +9,9 @@ module board(
     input move_left,       // Signal to move the paddle left
     input move_right,      // Signal to move the paddle right
     input [9:0] screen_width, // Width of the screen
-    input [9:0] paddle_width  // Width of the paddle
-    input y_initial,
+    input [9:0] screen_height,
+    input [9:0] board_width  // Width of the paddle
+    input [9:0] y_initial,
 );
 
 // Define the limits for paddle movement

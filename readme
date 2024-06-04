@@ -32,3 +32,7 @@ Pause button should technically just pass a clock that never has a positive edge
 Need to have a fixed constant for the y position of the board so the physics controller module can test for overlap/collision
 
 Board will have no acceleration, so on contact with the board, the ball is always affected by a fixed amount
+
+4 Jun
+TODO
+Need to adjust the handling of the balls direction, because there's nothing set that would allow it to move only stationarily
