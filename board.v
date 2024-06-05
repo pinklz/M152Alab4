@@ -2,6 +2,7 @@
 
 module board(
     input clk,             // Clock signal
+    input move_clk,
     input reset,           // Reset signal
     input pause,
     
@@ -23,30 +24,58 @@ wire [9:0] right_limit = screen_width - paddle_width;
 
 reg start = 1;
 
+// always @(posedge clk) begin
+//     if (reset or start) begin
+//         x_pos <= x_initial;
+//         start_out <= start;
+//     end
+//     else begin
+//         if (move_left || move_right) begin
+//             start_out <= 0;
+//         end
+//         start_out <= ~start;    // Begin game
+//         if (!pause) begin
+//            // Move paddle left
+//            if (move_left && current_x-1 > left_limit) begin
+//                x_pos <= current_x - 1; // Decrease x_pos to move left
+//            end
+//            // Move paddle right
+//            else if (move_right && current_x+1 < right_limit) begin
+//                x_pos <= current_x + 1; // Increase x_pos to move right
+//            end
+//        end else begin
+//            x_pos <= current_x;
+//        end
+//     end
+//     start_out <= start;
+// end
+
+
+// Process to handle start and reset signals
 always @(posedge clk) begin
-    if (reset or start) begin
+    if (reset || start) begin
         x_pos <= x_initial;
         start_out <= start;
-    end
-    else begin
+    end else begin
         if (move_left || move_right) begin
             start_out <= 0;
+            start <= 0;
         end
-        start_out <= ~start;    // Begin game
-        if (!pause) begin
-           // Move paddle left
-           if (move_left && current_x-1 > left_limit) begin
-               x_pos <= current_x - 1; // Decrease x_pos to move left
-           end
-           // Move paddle right
-           else if (move_right && current_x+1 < right_limit) begin
-               x_pos <= current_x + 1; // Increase x_pos to move right
-           end
-       end else begin
-           x_pos <= current_x;
-       end
     end
-    start_out <= start;
+end
+
+// Process to move the paddle
+always @(posedge move_clk) begin
+    if (!reset && !pause && !start) begin
+        // Move paddle left
+        if (move_left && x_pos > left_limit) begin
+            x_pos <= x_pos - 1; // Decrease x_pos to move left
+        end
+        // Move paddle right
+        else if (move_right && x_pos < right_limit) begin
+            x_pos <= x_pos + 1; // Increase x_pos to move right
+        end
+    end
 end
 
 endmodule

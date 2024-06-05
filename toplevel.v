@@ -65,12 +65,14 @@ module toplevel(
 // VGA display clock interconnect
 wire dclk;
 wire seghz;
+wire boardhz;
 
 clock_divider U1(
     .clk(clk),
     .rst(rst),
     .dclk(dclk),
-    .segment_clk(seghz)
+    .segment_clk(seghz),
+    .board_clk(boardhz)
     );
     
     
@@ -121,11 +123,15 @@ wire start = 1;
 
 board paddle(
     .clk(clk),
+    .move_clk(boardhz)      // CHECK
     .reset(reset),
     .move_left(left),
     .move_right(right),
     .x_initial(board_x_init),
     .y_initial(board_y),
+
+    .screen_width(640),     // Check if these are right
+    .paddle_width(64),
 
     .start_out(beginning_of_game),
     .x_pos(board_x)
