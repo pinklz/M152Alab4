@@ -119,19 +119,14 @@ wire [9:0] board_x_init = 320 - 32; // 640/2 - 64/2
 wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
 
 wire [9:0] board_x;
-wire start = 1;
 
 board paddle(
     .clk(clk),
-    .move_clk(boardhz)      // CHECK
     .reset(reset),
     .move_left(left),
     .move_right(right),
-    .x_initial(board_x_init),
+    .x_initial(board_x),
     .y_initial(board_y),
-
-    .screen_width(640),     // Check if these are right
-    .paddle_width(64),
 
     .start_out(beginning_of_game),
     .x_pos(board_x)
@@ -140,12 +135,12 @@ board paddle(
 wire [9:0] ball_x;
 wire [9:0] ball_y;
 
-ball ball(
-    .clk(clk),
-    .reset(rst),
-    .pause(paus),
-    .x_initial(board_x_init)  
-);
+//ball ball(
+//    .clk(clk),
+//    .reset(rst),
+//    .pause(paus),
+//    .x_initial(board_x_init)  
+//);
 
 wire [9:0] brick1_x = 320 - 32;
 wire [9:0] brick1_y = 300;
@@ -167,7 +162,7 @@ display U3(
     .red(red),
     .green(green),
     .blue(blue)
-);
+    );
     
     
 /***** DISPLAY SCORE ******/
