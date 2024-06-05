@@ -5,13 +5,18 @@ module clock_divider(
 	input wire rst,		//asynchronous reset
 	output wire dclk,		//pixel clock: 25MHz
 
-	output wire segment_clk  // for 7-segment display	
+	output wire segment_clk,  // for 7-segment display	
+	output wire board_clk
 	);
 
 	//For segment clock frequency of 500hz
     localparam toSegmentHz = 10000; //1000
 	reg [31:0] segment_clock_counter;
 	reg seg;
+
+	localparam boardHz = 100000;
+	reg [17:0] boardCounter;
+	reg board;
 
 	// 17-bit counter variable
 	reg [17:0] q;
@@ -24,9 +29,11 @@ module clock_divider(
 		// reset condition
 		if (rst == 1)
 			q <= 0;
+			boardCounter <= 0;
 		// increment counter by one
 		else
 			q <= q + 1;
+			boardCounter <= boardCounter + 1;
 
 
 		/**** SEVEN SEGMENT DISPLAY ****/ 
@@ -43,10 +50,24 @@ module clock_divider(
 			seg <= segment_clk;
 		end
 
+		if (rst == 1) begin
+			boardCounter <= 17'b0;
+			board <= 1;
+		end
+		else if (boardCounter >= boardHz - 1) begin
+			boardCounter <= 17'b0;
+			board <= ! board_clk;
+		end
+		else begin
+			boardCounter <= boardCounter + 1;
+			board <= board_clk;
+		end
+
 	end
 
 // 100Mhz ÷ 4 = 25MHz --bottom 2 bits will count from 0 to 4
 assign dclk = q[0] & q[1];
 assign segment_clk = seg;
+assign board_clk = board;
 
 endmodule

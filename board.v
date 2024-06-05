@@ -12,9 +12,6 @@ module board(
     input [9:0] paddle_width,  // Width of the paddle
     input [9:0] y_initial,
 
-    input [9:0] current_x,
-    input start,
-
     output start_out,
     
     output reg [9:0] x_pos // X position of the paddle (10-bit for screen resolution)
@@ -24,12 +21,17 @@ module board(
 wire [9:0] left_limit = 0;
 wire [9:0] right_limit = screen_width - paddle_width;
 
+reg start = 1;
+
 always @(posedge clk) begin
     if (reset or start) begin
         x_pos <= x_initial;
         start_out <= start;
     end
     else begin
+        if (move_left || move_right) begin
+            start_out <= 0;
+        end
         start_out <= ~start;    // Begin game
         if (!pause) begin
            // Move paddle left
@@ -44,6 +46,7 @@ always @(posedge clk) begin
            x_pos <= current_x;
        end
     end
+    start_out <= start;
 end
 
 endmodule

@@ -122,13 +122,13 @@ wire start = 1;
 board paddle(
     .clk(clk),
     .reset(reset),
-    .start(start),
     .move_left(left),
     .move_right(right),
     .x_initial(board_x_init),
     .y_initial(board_y),
 
-    .start_out(beginning_of_game)
+    .start_out(beginning_of_game),
+    .x_pos(board_x)
 );
 
 wire [9:0] ball_x;
@@ -154,14 +154,14 @@ bricks brick(
 display U3(
     .dclk(dclk),
     .rst(rst),
-    .board_x(board_x_init),
+    .board_x(board_x),
     .board_y(board_y),
     .hsync(hsync),
     .vsync(vsync),
     .red(red),
     .green(green),
     .blue(blue)
-    );
+);
     
     
 /***** DISPLAY SCORE ******/
