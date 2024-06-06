@@ -5,6 +5,11 @@ module display(
     input wire rst,             //asynchronous reset
     input wire [9:0] board_x,   // horizontal position of the board
     input wire [9:0] board_y,   // vertical position of the board
+    
+    input wire [9:0] brick_x,
+    input wire [9:0] brick_y,
+    
+    
     output wire hsync,          // horizontal sync out
     output wire vsync,          // vertical sync out
     output reg [2:0] red,       // red vga output
@@ -27,6 +32,9 @@ parameter vfp = 511;     // beginning of vertical front porch
 // white board parameters
 parameter board_width = 64;   // 1/10 of 640 pixels
 parameter board_height = 8;   // 8 pixels high
+
+// brick parameters
+parameter brick_size = 50;
 
 // registers for storing the horizontal & vertical counters
 reg [9:0] hc;
