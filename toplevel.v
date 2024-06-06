@@ -144,12 +144,12 @@ wire [9:0] ball_y;
 
 wire [9:0] brick1_x = 320 - 32;
 wire [9:0] brick1_y = 300;
-bricks brick(
-    .clk(clk),
-    .reset(rst),
-    .x_pos(brick1_x),
-    .y_pos(brick1_y)
-);
+//bricks brick(
+//    .clk(clk),
+//    .reset(rst),
+//    .x_pos(brick1_x),
+//    .y_pos(brick1_y)
+//);
 
 // VGA controller
 display U3(
@@ -157,6 +157,8 @@ display U3(
     .rst(rst),
     .board_x(board_x),
     .board_y(board_y),
+    .brick_x(brick1_x),
+    .brick_y(brick1_y),
     .hsync(hsync),
     .vsync(vsync),
     .red(red),
