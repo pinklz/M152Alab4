@@ -9,8 +9,14 @@ module physics_controller(
     input [9:0] screen_width,
     input [9:0] screen_height,
     input [9:0] board_width,
-    output wire collision_with_paddle
-    //output wire [NUM_BRICKS-1:0] collision_with_bricks
+    input board_height,
+    input ball_start_posx,
+    input ball_start_posy,
+    input board_start_posx,
+    input board_start_posy,
+    input brick_posx,
+    input brick_posy,
+    input brick_width,
 );
 
 parameter NUM_BRICKS = 32;
@@ -33,8 +39,8 @@ ball ball_obj(
     .clk(clk),
     .reset(reset),
     .pause(pause),
-    .x_initial(320), // Example start position
-    .y_initial(240),
+    .x_initial(ball_start_posx), // Example start position
+    .y_initial(ball_start_posy),
     .x_pos(ball_x),
     .y_pos(ball_y),
     .x_dir(ball_x_direction),
@@ -47,20 +53,23 @@ ball ball_obj(
     .reset(reset),
     .pause(pause),
     .x_pos(board_x),
-    .x_initial(SET INITIAL X),
+    .x_initial(board_start_posx),
     .move_left(board_left),
     .move_right(board_right),
     .screen_width(screen_width),
     .screen_height(screen_height),
-    .board_width(SET BOARD WIDTH),
-    .y_initial(SET Y INITIAL)
+    .board_width(board_width),
+    .y_initial(board_start_posy)
 );
 
-brick brick_obj(
+//wire [9:0] brick_pos_x = 0;
+//wire [9:0] brick_pos_y = 0;
+
+bricks brick_obj(
     .clk(clk),
     .reset(reset),
-    .x_pos(SET X POS),
-    .y_pos(SET Y POS),
+    .x_pos(brick_posx),
+    .y_pos(brick_posy),
     .killBrick(killBrick),
     .isAlive(isBrickAlive)
 );
@@ -88,7 +97,7 @@ endgenerate
 always @(posedge clk or posedge reset) begin
 
     //Detects ball collision with board
-    if ((ball_x >= board_x) && (ball_x <= board_x + 64) && (ball_y >= board_y) && (ball_y <= paddle_y + 8)) begin
+    if ((ball_x >= board_x) && (ball_x <= board_x + board_width) && (ball_y >= board_start_posy) && (ball_y <= board_start_posy + board_height)) begin
         if (board_left) begin
             ball_x_direction <= 2b'01;
             ball_y_direction <= ~ball_y_direction;
@@ -104,19 +113,19 @@ always @(posedge clk or posedge reset) begin
     end
 
     //Detects ball collision with brick (Still need to insert dead/alive logic)
-    else if ((ball_x >= BRICKPOSX) && (ball_x <= BRICKPOS + BRICKWIDTH) && (ball_y >= BRICKPOSY) && (ball_y <= BRICKPOSY + BRICKHEIGHT)) begin
+    else if ((ball_x >= brick_posx) && (ball_x <= brick_posx + brick_width) && (ball_y >= brick_posy) && (ball_y <= brick_posy + brick_width)) begin
         ball_x_direction <= ~ball_x_direction;
         ball_y_direction <= ~ball_y_direction;
     end
 
     //Detects ball collision with border
-    else if ((ball_x == SCREENLEFT) || (ball_x == SCREENRIGHT) || (ball_y == SCREENTOP)) begin
+    else if ((ball_x == 0) || (ball_x == screen_width) || (ball_y == screen_height)) begin
         ball_x_direction <= ~ball_x_direction;
         ball_y_direction <= ~ball_y_direction;
     end
 
     //Game over detection
-    else if ((ball_y == SCREENBOTTOM)) begin
+    else if ((ball_y == 0)) begin
         //reset the game/handle gameover logic
     end
 end
