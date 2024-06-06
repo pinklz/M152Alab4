@@ -18,8 +18,8 @@ module display(
     );
 
 // video structure constants
-parameter hpixels = 800; // horizontal pixels per line
-parameter vlines = 521;  // vertical lines per frame
+parameter hpixels = 400; // horizontal pixels per line
+parameter vlines = 221;  // vertical lines per frame
 parameter hpulse = 96;   // hsync pulse length
 parameter vpulse = 2;    // vsync pulse length
 parameter hbp = 144;     // end of horizontal back porch
@@ -83,6 +83,14 @@ begin
             green = 3'b111;
             blue = 3'b111;
         end
+//        else if ((vc >= (vbp+brick_y)) && (vc < (vbp+brick_y + brick_size)) &&
+//                    (hc >= (hbp+brick_x)) && (hc < (hbp+board_x + brick_size))) begin
+                    
+//            red = 3'b000;
+//            green = 3'b000;
+//            blue = 3'b000;
+//        end
+        
         // within active horizontal range
         else if (hc >= hbp && hc < hfp)
         begin
