@@ -11,6 +11,10 @@ module toplevel(
     output wire [2:0] blue,   // blue vga output - 3 bits
     output wire hsync,        // horizontal sync out
     output wire vsync,         // vertical sync out
+
+    //TRYING OUT NEW DISPLAY
+    output [11:0] rgb       // to DAC, 3 bits to VGA port on Basys 3
+
     
     output reg [6:0] seven_seg_display,
     output reg [3:0] an
@@ -152,19 +156,36 @@ wire [9:0] brick1_y = 300;
 //);
 
 // VGA controller
-display U3(
-    .dclk(dclk),
-    .rst(rst),
-    .board_x(board_x),
-    .board_y(board_y),
-    .brick_x(brick1_x),
-    .brick_y(brick1_y),
-    .hsync(hsync),
-    .vsync(vsync),
-    .red(red),
-    .green(green),
-    .blue(blue)
-    );
+// display U3(
+//     .dclk(dclk),
+//     .rst(rst),
+//     .board_x(board_x),
+//     .board_y(board_y),
+//     .brick_x(brick1_x),
+//     .brick_y(brick1_y),
+//     .hsync(hsync),
+//     .vsync(vsync),
+//     .red(red),
+//     .green(green),
+//     .blue(blue)
+//     );
+
+wire w_video_on, w_p_tick;
+wire [9:0] w_x, w_y;
+reg [11:0] rgb_reg;
+wire[11:0] rgb_next;
+    
+vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
+                      .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
+pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
+                        .x(w_x), .y(w_y), .rgb(rgb_next));
+    
+always @(posedge clk) begin
+        if(w_p_tick)
+            rgb_reg <= rgb_next;
+end
+            
+ assign rgb = rgb_reg;
     
     
 /***** DISPLAY SCORE ******/
