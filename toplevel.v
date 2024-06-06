@@ -6,11 +6,15 @@ module toplevel(
     input wire l,       // move left button
     input wire r,       // move right button
     
-    output wire [2:0] red,    // red vga output - 3 bits
-    output wire [2:0] green,  // green vga output - 3 bits
-    output wire [2:0] blue,   // blue vga output - 3 bits
+//    output wire [2:0] red,    // red vga output - 3 bits
+//    output wire [2:0] green,  // green vga output - 3 bits
+//    output wire [2:0] blue,   // blue vga output - 3 bits
     output wire hsync,        // horizontal sync out
     output wire vsync,         // vertical sync out
+
+    //TRYING OUT NEW DISPLAY
+    output [11:0] rgb,       // to DAC, 3 bits to VGA port on Basys 3
+
     
     output reg [6:0] seven_seg_display,
     output reg [3:0] an
@@ -65,12 +69,14 @@ module toplevel(
 // VGA display clock interconnect
 wire dclk;
 wire seghz;
+wire boardhz;
 
 clock_divider U1(
     .clk(clk),
     .rst(rst),
     .dclk(dclk),
-    .segment_clk(seghz)
+    .segment_clk(seghz),
+    .board_clk(boardhz)
     );
     
     
@@ -117,51 +123,69 @@ wire [9:0] board_x_init = 320 - 32; // 640/2 - 64/2
 wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
 
 wire [9:0] board_x;
-wire start = 1;
 
 board paddle(
     .clk(clk),
     .reset(reset),
-    .start(start),
     .move_left(left),
     .move_right(right),
-    .x_initial(board_x_init),
+    .x_initial(board_x),
     .y_initial(board_y),
 
-    .start_out(beginning_of_game)
+    .start_out(beginning_of_game),
+    .x_pos(board_x)
 );
 
 wire [9:0] ball_x;
 wire [9:0] ball_y;
 
-ball ball(
-    .clk(clk),
-    .reset(rst),
-    .pause(paus),
-    .x_initial(board_x_init)  
-);
+//ball ball(
+//    .clk(clk),
+//    .reset(rst),
+//    .pause(paus),
+//    .x_initial(board_x_init)  
+//);
 
 wire [9:0] brick1_x = 320 - 32;
 wire [9:0] brick1_y = 300;
-bricks brick(
-    .clk(clk),
-    .reset(rst),
-    .x_pos(brick1_x),
-    .y_pos(brick1_y)
-);
+//bricks brick(
+//    .clk(clk),
+//    .reset(rst),
+//    .x_pos(brick1_x),
+//    .y_pos(brick1_y)
+//);
 
 // VGA controller
-display U3(
-    .dclk(dclk),
-    .rst(rst),
-    .board_x(board_x_init),
-    .board_y(board_y),
-    .hsync(hsync),
-    .vsync(vsync),
-    .red(red),
-    .green(green),
-    .blue(blue)
-    );
+// display U3(
+//     .dclk(dclk),
+//     .rst(rst),
+//     .board_x(board_x),
+//     .board_y(board_y),
+//     .brick_x(brick1_x),
+//     .brick_y(brick1_y),
+//     .hsync(hsync),
+//     .vsync(vsync),
+//     .red(red),
+//     .green(green),
+//     .blue(blue)
+//     );
+
+wire w_video_on, w_p_tick;
+wire [9:0] w_x, w_y;
+reg [11:0] rgb_reg;
+wire[11:0] rgb_next;
+    
+vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
+                      .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
+pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
+                        .x(w_x), .y(w_y), .rgb(rgb_next));
+    
+always @(posedge clk) begin
+        if(w_p_tick)
+            rgb_reg <= rgb_next;
+end
+            
+ assign rgb = rgb_reg;
     
     
 /***** DISPLAY SCORE ******/
