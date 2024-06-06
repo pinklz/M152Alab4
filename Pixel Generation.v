@@ -24,10 +24,15 @@ module pixel_generation(
 
     parameter BOARD_RGB = 12'hFFF;          // white color for the board
     parameter BRICK_RGB = 12'hF00;          // red color for the brick
-    parameter BG_RGB = 12'h0F0;             // green background
     parameter BOARD_WIDTH = 64;             // width of the board in pixels
     parameter BOARD_HEIGHT = 8;             // height of the board in pixels
     parameter BRICK_SIZE = 50;              // size of the brick in pixels
+
+    parameter BALL_RGB = 12'h0FF;           // red & green = yellow for ball
+    parameter BALL_SIZE = 8;                // width of ball sides in pixels
+    parameter BALL_VELOCITY_POS = 2;        // set position change value for positive direction
+    parameter BALL_VELOCITY_NEG = -2;       // set position change value for negative direction  
+
     
     // // square boundaries and position
     // wire [9:0] sq_x_l, sq_x_r;              // square left and right boundary
@@ -68,18 +73,90 @@ module pixel_generation(
     wire brick_on;
     assign brick_on = (brick_x_l <= x) && (x <= brick_x_r) &&
                       (brick_y_t <= y) && (y <= brick_y_b);
+
+
+
+// BALL CONTROL
+    // ball boundaries and position
+    wire [9:0] ball_x_l, ball_x_r;              // ball left and right boundary
+    wire [9:0] ball_y_t, ball_y_b;              // ball top and bottom boundary
+
+    reg [9:0] ball_x_reg, ball_y_reg;           // regs to track left, top position
+    wire [9:0] ball_x_next, ball_y_next;        // buffer wires
+
+    reg [9:0] x_delta_reg, y_delta_reg;         // track ball speed
+    reg [9:0] x_delta_next, y_delta_next;       // buffer regs  
+
+    
+    // register control
+    always @(posedge clk or posedge reset)
+        if(reset) begin
+            ball_x_reg <= board_x + (BOARD_WIDTH / 2) - (BALL_SIZE / 2); // start at the board center
+            ball_y_reg <= board_y - BALL_SIZE;  // start just above the board
+            x_delta_reg <= BALL_VELOCITY_POS;
+            y_delta_reg <= BALL_VELOCITY_NEG;
+        end
+        else begin
+            ball_x_reg <= ball_x_next;
+            ball_y_reg <= ball_y_next;
+            x_delta_reg <= x_delta_next;
+            y_delta_reg <= y_delta_next;
+        end
+
+    // ball boundaries
+    assign ball_x_l = ball_x_reg;                   // left boundary
+    assign ball_y_t = ball_y_reg;                   // top boundary
+    assign ball_x_r = ball_x_l + BALL_SIZE - 1;     // right boundary
+    assign ball_y_b = ball_y_t + BALL_SIZE - 1;     // bottom boundary
+
+    // ball status signal
+    wire ball_on;
+    assign ball_on = (ball_x_l <= x) && (x <= ball_x_r) &&
+                     (ball_y_t <= y) && (y <= ball_y_b);
+
+    // new ball position
+    assign ball_x_next = (refresh_tick) ? ball_x_reg + x_delta_reg : ball_x_reg;
+    assign ball_y_next = (refresh_tick) ? ball_y_reg + y_delta_reg : ball_y_reg;
+
     
 
     // RGB control
-    always @*
-        if (~video_on)
+    always @(*) begin
+        if (~video_on) begin
             rgb = 12'h000;          // black (no value) outside display area
-        else if (board_on)
-            rgb = BOARD_RGB;        // white board
-        else if (brick_on)
+        end
+        else if (board_on) begin
+            rgb = BOARD_RGB; 
+        end       // white board
+        else if (brick_on) begin
             rgb = BRICK_RGB;        // red brick
-        else
+        end
+        else if (ball_on) begin
+            rbg = BALL_RBG;
+        end
+        else begin
             rgb = BG_RGB;           // green background
+        end
+
+
+        // BALL MOVEMENT
+        x_delta_next = x_delta_reg;
+        y_delta_next = y_delta_reg;
+        if(ball_y_t < 1) begin                             // collide with top display edge
+            y_delta_next = BALL_VELOCITY_POS;         // change y direction (move down)
+        end
+        else if((ball_y_b >= board_y && ball_y_b <= board_y + BOARD_HEIGHT &&  // collide with the board
+                ball_x_r >= board_x && ball_x_l <= board_x + BOARD_WIDTH) )begin
+            y_delta_next = BALL_VELOCITY_NEG;         // change y direction (move up)
+            x_delta_next = -x_delta_reg;              // bounce horizontally
+        end 
+        else if(ball_x_l < 1) begin                    // collide with left display edge
+            x_delta_next = BALL_VELOCITY_POS;         // change x direction (move right)
+        end
+        else if(ball_x_r > X_MAX) begin                     // collide with right display edge
+            x_delta_next = BALL_VELOCITY_NEG;         // change x direction (move left)
+        end
+    end
 
 
 /******** BOUNCING SQUARE original code ********/
