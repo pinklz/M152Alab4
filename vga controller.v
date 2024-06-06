@@ -32,14 +32,14 @@ module vga_controller(
     // Based on VGA standards found at vesa.org for 640x480 resolution
     // Total horizontal width of screen = 800 pixels, partitioned  into sections
     parameter HD = 640;             // horizontal display area width in pixels
-    parameter HF = 48;              // horizontal front porch width in pixels
-    parameter HB = 16;              // horizontal back porch width in pixels
+    parameter HF = 12;              // horizontal front porch width in pixels
+    parameter HB = 12;              // horizontal back porch width in pixels
     parameter HR = 96;              // horizontal retrace width in pixels
     parameter HMAX = HD+HF+HB+HR-1; // max value of horizontal counter = 799
     // Total vertical length of screen = 525 pixels, partitioned into sections
     parameter VD = 480;             // vertical display area length in pixels 
-    parameter VF = 10;              // vertical front porch length in pixels  
-    parameter VB = 33;              // vertical back porch length in pixels   
+    parameter VF = 12;              // vertical front porch length in pixels  
+    parameter VB = 12;              // vertical back porch length in pixels   
     parameter VR = 2;               // vertical retrace length in pixels  
     parameter VMAX = VD+VF+VB+VR-1; // max value of vertical counter = 524   
     

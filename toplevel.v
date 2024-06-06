@@ -178,7 +178,11 @@ wire[11:0] rgb_next;
 vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
                       .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
 pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
-                        .x(w_x), .y(w_y), .rgb(rgb_next));
+                        .x(w_x), .y(w_y), .rgb(rgb_next),
+                        .board_x(board_x), 
+                        .board_y(board_y),
+                        .brick_x(50), 
+                        .brick_y(50));
     
 always @(posedge clk) begin
         if(w_p_tick)
