@@ -27,13 +27,15 @@ module clock_divider(
 	always @(posedge clk or posedge rst)
 	begin
 		// reset condition
-		if (rst == 1)
+		if (rst == 1) begin
 			q <= 0;
 			boardCounter <= 0;
 		// increment counter by one
-		else
+		end
+		else begin
 			q <= q + 1;
 			boardCounter <= boardCounter + 1;
+			end
 
 
 		/**** SEVEN SEGMENT DISPLAY ****/ 

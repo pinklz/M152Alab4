@@ -9,7 +9,7 @@ module physics_controller(
     input [9:0] screen_width,
     input [9:0] screen_height,
     input [9:0] board_width,
-    output wire collision_with_paddle,
+    output wire collision_with_paddle
     //output wire [NUM_BRICKS-1:0] collision_with_bricks
 );
 
@@ -83,13 +83,12 @@ endgenerate
 */
 
 // Collision detection logic
-assign collision_with_paddle = (ball_x >= paddle_x) && (ball_x <= paddle_x + 80) && (ball_y >= paddle_y) && (ball_y <= paddle_y + 20);
-assign collision_with_bricks = brick_hits;
+
 
 always @(posedge clk or posedge reset) begin
 
     //Detects ball collision with board
-    if ((ball_x >= paddle_x) && (ball_x <= paddle_x + PADDLEWIDTH) && (ball_y >= paddle_y) && (ball_y <= paddle_y + PADDLEHEIGHT)) begin
+    if ((ball_x >= board_x) && (ball_x <= board_x + 64) && (ball_y >= board_y) && (ball_y <= paddle_y + 8)) begin
         if (board_left) begin
             ball_x_direction <= 2b'01;
             ball_y_direction <= ~ball_y_direction;

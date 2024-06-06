@@ -6,14 +6,14 @@ module toplevel(
     input wire l,       // move left button
     input wire r,       // move right button
     
-    output wire [2:0] red,    // red vga output - 3 bits
-    output wire [2:0] green,  // green vga output - 3 bits
-    output wire [2:0] blue,   // blue vga output - 3 bits
+//    output wire [2:0] red,    // red vga output - 3 bits
+//    output wire [2:0] green,  // green vga output - 3 bits
+//    output wire [2:0] blue,   // blue vga output - 3 bits
     output wire hsync,        // horizontal sync out
     output wire vsync,         // vertical sync out
 
     //TRYING OUT NEW DISPLAY
-    output [11:0] rgb       // to DAC, 3 bits to VGA port on Basys 3
+    output [11:0] rgb,       // to DAC, 3 bits to VGA port on Basys 3
 
     
     output reg [6:0] seven_seg_display,

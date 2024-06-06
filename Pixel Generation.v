@@ -7,7 +7,8 @@ module pixel_generation(
     input [9:0] x, y,                       // from VGA controller
     output reg [11:0] rgb,                   // to DAC, to VGA controller
 
-    input [9:0] board_x, board_y
+    input [9:0] board_x, board_y,
+    input [9:0] brick_x, brick_y
     );
     
     parameter X_MAX = 639;                  // right border of display area
@@ -132,7 +133,7 @@ module pixel_generation(
             rgb = BRICK_RGB;        // red brick
         end
         else if (ball_on) begin
-            rbg = BALL_RBG;
+            rgb = BALL_RGB;
         end
         else begin
             rgb = BG_RGB;           // green background
