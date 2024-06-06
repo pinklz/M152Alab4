@@ -23,9 +23,11 @@ module pixel_generation(
     assign refresh_tick = ((y == 481) && (x == 0)) ? 1 : 0;
 
     parameter BOARD_RGB = 12'hFFF;          // white color for the board
+    parameter BRICK_RGB = 12'hF00;          // red color for the brick
     parameter BG_RGB = 12'h0F0;             // green background
     parameter BOARD_WIDTH = 64;             // width of the board in pixels
     parameter BOARD_HEIGHT = 8;             // height of the board in pixels
+    parameter BRICK_SIZE = 50;              // size of the brick in pixels
     
     // // square boundaries and position
     // wire [9:0] sq_x_l, sq_x_r;              // square left and right boundary
@@ -50,6 +52,22 @@ module pixel_generation(
     wire board_on;
     assign board_on = (board_x_l <= x) && (x <= board_x_r) &&
                       (board_y_t <= y) && (y <= board_y_b);
+
+
+
+    // Calculate brick boundaries
+    wire [9:0] brick_x_l, brick_x_r;        // brick left and right boundary
+    wire [9:0] brick_y_t, brick_y_b;        // brick top and bottom boundary
+
+    assign brick_x_l = brick_x;
+    assign brick_x_r = brick_x + BRICK_SIZE - 1;
+    assign brick_y_t = brick_y;
+    assign brick_y_b = brick_y + BRICK_SIZE - 1;
+
+    // brick status signal
+    wire brick_on;
+    assign brick_on = (brick_x_l <= x) && (x <= brick_x_r) &&
+                      (brick_y_t <= y) && (y <= brick_y_b);
     
 
     // RGB control
@@ -58,6 +76,8 @@ module pixel_generation(
             rgb = 12'h000;          // black (no value) outside display area
         else if (board_on)
             rgb = BOARD_RGB;        // white board
+        else if (brick_on)
+            rgb = BRICK_RGB;        // red brick
         else
             rgb = BG_RGB;           // green background
 
