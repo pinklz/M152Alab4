@@ -125,7 +125,7 @@ wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
 wire [9:0] board_x;
 
 board paddle(
-    .clk(clk),
+    .clk(boardhz),
     .reset(reset),
     .move_left(left),
     .move_right(right),
