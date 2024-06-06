@@ -24,7 +24,7 @@ module pixel_generation(
     assign refresh_tick = ((y == 481) && (x == 0)) ? 1 : 0;
 
     parameter BOARD_RGB = 12'hFFF;          // white color for the board
-    parameter BRICK_RGB = 12'hF00;          // red color for the brick
+    parameter BRICK_RGB = 12'hFFF;          // red color for the brick
     parameter BOARD_WIDTH = 64;             // width of the board in pixels
     parameter BOARD_HEIGHT = 8;             // height of the board in pixels
     parameter BRICK_SIZE = 50;              // size of the brick in pixels
@@ -147,9 +147,14 @@ module pixel_generation(
             y_delta_next = BALL_VELOCITY_POS;         // change y direction (move down)
         end
         else if((ball_y_b >= board_y && ball_y_b <= board_y + BOARD_HEIGHT &&  // collide with the board
-                ball_x_r >= board_x && ball_x_l <= board_x + BOARD_WIDTH) )begin
+                ball_x_r >= board_x && ball_x_l <= board_x + BOARD_WIDTH ))begin
             y_delta_next = BALL_VELOCITY_NEG;         // change y direction (move up)
             x_delta_next = -x_delta_reg;              // bounce horizontally
+        end
+        else if ( (ball_y_b >= brick_y_t && ball_y_b <= brick_y + 50 &&  // collide with the board
+                 ball_x_r >= brick_x && ball_x_l <= brick_x + 50) ) begin
+               y_delta_next = BALL_VELOCITY_NEG;
+               x_delta_next = -x_delta_reg;                         
         end 
         else if(ball_x_l < 1) begin                    // collide with left display edge
             x_delta_next = BALL_VELOCITY_POS;         // change x direction (move right)

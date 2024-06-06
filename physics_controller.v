@@ -17,12 +17,18 @@ module physics_controller(
     input brick_posx,
     input brick_posy,
     input brick_width,
+    output render_boardx,
+    output render_boardy,
+    output render_ballx,
+    output render_bally,
+    output render_brickx,
+    output render_bricky
 );
 
 parameter NUM_BRICKS = 32;
 wire [9:0] ball_x, ball_y;
-wire [1:0] ball_x_direction;
-wire [1:0] ball_y_direction;
+reg [1:0] ball_x_direction;
+reg [1:0] ball_y_direction;
 
 //wire [NUM_BRICKS-1:0] brick_hits;
 
@@ -99,11 +105,11 @@ always @(posedge clk or posedge reset) begin
     //Detects ball collision with board
     if ((ball_x >= board_x) && (ball_x <= board_x + board_width) && (ball_y >= board_start_posy) && (ball_y <= board_start_posy + board_height)) begin
         if (board_left) begin
-            ball_x_direction <= 2b'01;
+            ball_x_direction <= 2'b01;
             ball_y_direction <= ~ball_y_direction;
         end
         else if (board_right) begin
-            ball_x_direction <= 2b'10;
+            ball_x_direction <= 2'b10;
             ball_y_direction <= ~ball_y_direction;
         end
         else begin
@@ -128,6 +134,7 @@ always @(posedge clk or posedge reset) begin
     else if ((ball_y == 0)) begin
         //reset the game/handle gameover logic
     end
+    
 end
 
 endmodule

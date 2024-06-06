@@ -146,8 +146,8 @@ wire [9:0] ball_y;
 //    .x_initial(board_x_init)  
 //);
 
-wire [9:0] brick1_x = 320 - 32;
-wire [9:0] brick1_y = 300;
+wire [9:0] brick1_x = 400 - 32; //middle is 320 -32
+wire [9:0] brick1_y = 60;
 //bricks brick(
 //    .clk(clk),
 //    .reset(rst),
@@ -181,8 +181,8 @@ pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on),
                         .x(w_x), .y(w_y), .rgb(rgb_next),
                         .board_x(board_x), 
                         .board_y(board_y),
-                        .brick_x(50), 
-                        .brick_y(50));
+                        .brick_x(brick1_x), 
+                        .brick_y(brick1_y));
     
 always @(posedge clk) begin
         if(w_p_tick)
