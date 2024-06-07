@@ -39,8 +39,8 @@ module pixel_generation(
 
     parameter BALL_RGB = 12'h0FF;           // red & green = yellow for ball
     parameter BALL_SIZE = 8;                // width of ball sides in pixels
-    parameter BALL_VELOCITY_POS = 2;        // set position change value for positive direction
-    parameter BALL_VELOCITY_NEG = -2;       // set position change value for negative direction  
+    parameter BALL_VELOCITY_POS = 1;        // set position change value for positive direction
+    parameter BALL_VELOCITY_NEG = -1;       // set position change value for negative direction  
 
     // Calculate board boundaries
     wire [9:0] board_x_l, board_x_r;        // board left and right boundary
@@ -130,7 +130,7 @@ module pixel_generation(
     assign ball_y_next = (refresh_tick) ? ball_y_reg + y_delta_reg : ball_y_reg;
 
     //Collision detection
-    reg hit;
+    // reg hit;
 
     // RGB control
     always @(*) begin
@@ -189,7 +189,7 @@ module pixel_generation(
                 (ball_y_b >= brick_y_t[5] && ball_y_b <= brick_y_b[5] && ball_x_r >= brick_x_l[5] && ball_x_l <= brick_x_r[5])) begin
                 y_delta_next = BALL_VELOCITY_NEG;
                 x_delta_next = -x_delta_reg;
-                hit <= 1;
+                collision <= 1;
             end
         end
         if(ball_x_l < 1) begin                    // collide with left display edge
@@ -199,7 +199,7 @@ module pixel_generation(
             x_delta_next = BALL_VELOCITY_NEG;         // change x direction (move left)
         end
     end
-assign collision = hit;
+//assign collision = hit;
 endmodule
 
 
