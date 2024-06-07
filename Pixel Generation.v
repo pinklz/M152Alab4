@@ -13,7 +13,9 @@ module pixel_generation(
     input [9:0] brick_x2, brick_y2,
     input [9:0] brick_x3, brick_y3,
     input [9:0] brick_x4, brick_y4,
-    input [9:0] brick_x5, brick_y5
+    input [9:0] brick_x5, brick_y5,
+
+    output reg collision
     );
     
     parameter X_MAX = 639;                  // right border of display area
@@ -127,6 +129,9 @@ module pixel_generation(
     assign ball_x_next = (refresh_tick) ? ball_x_reg + x_delta_reg : ball_x_reg;
     assign ball_y_next = (refresh_tick) ? ball_y_reg + y_delta_reg : ball_y_reg;
 
+    //Collision detection
+    reg hit;
+
     // RGB control
     always @(*) begin
         if (~video_on) begin
@@ -137,13 +142,28 @@ module pixel_generation(
         end       // white board
         else begin
             rgb = BG_RGB;           // green background
-            if (brick_on[0]) rgb = BRICK_RGB;
-            if (brick_on[1]) rgb = BRICK_RGB;
-            if (brick_on[2]) rgb = BRICK_RGB;
-            if (brick_on[3]) rgb = BRICK_RGB;
-            if (brick_on[4]) rgb = BRICK_RGB;
-            if (brick_on[5]) rgb = BRICK_RGB;
-            if (ball_on) rgb = BALL_RGB;
+            if (brick_on[0]) begin
+                rgb = BRICK_RGB;
+            end
+            if (brick_on[1]) begin
+                rgb = BRICK_RGB;
+            end
+            if (brick_on[2]) begin
+                rgb = BRICK_RGB;
+            end
+            if (brick_on[3]) begin
+                rgb = BRICK_RGB;
+            end
+            if (brick_on[4]) begin
+                rgb = BRICK_RGB;
+            end
+            if (brick_on[5]) begin
+                rgb = BRICK_RGB;
+            end
+
+            if (ball_on) begin
+                rgb = BALL_RGB;
+            end
         end
 
         // BALL MOVEMENT
@@ -151,6 +171,9 @@ module pixel_generation(
         y_delta_next = y_delta_reg;
         if(ball_y_t < 1) begin                             // collide with top display edge
             y_delta_next = BALL_VELOCITY_POS;         // change y direction (move down)
+        end
+        if (ball_y_t > Y_MAX) begin
+            y_delta_next = BALL_VELOCITY_NEG;
         end
         else if((ball_y_b >= board_y && ball_y_b <= board_y + BOARD_HEIGHT &&  // collide with the board
                 ball_x_r >= board_x && ball_x_l <= board_x + BOARD_WIDTH ))begin
@@ -166,6 +189,7 @@ module pixel_generation(
                 (ball_y_b >= brick_y_t[5] && ball_y_b <= brick_y_b[5] && ball_x_r >= brick_x_l[5] && ball_x_l <= brick_x_r[5])) begin
                 y_delta_next = BALL_VELOCITY_NEG;
                 x_delta_next = -x_delta_reg;
+                hit <= 1;
             end
         end
         if(ball_x_l < 1) begin                    // collide with left display edge
@@ -175,7 +199,7 @@ module pixel_generation(
             x_delta_next = BALL_VELOCITY_NEG;         // change x direction (move left)
         end
     end
-
+assign collision = hit;
 endmodule
 
 

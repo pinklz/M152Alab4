@@ -79,9 +79,61 @@ clock_divider U1(
     .board_clk(boardhz)
     );
     
+
+// Board position parameters to center the board
+wire [9:0] board_x_init = 320 - 32; // 640/2 - 64/2
+wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
+
+wire [9:0] board_x;
+
+board paddle(
+    .clk(boardhz),
+    .reset(reset),
+    .move_left(left),
+    .move_right(right),
+    .x_initial(board_x),
+    .y_initial(board_y),
+
+    .start_out(beginning_of_game),
+    .x_pos(board_x)
+);
+
+wire [9:0] ball_x;
+wire [9:0] ball_y;
+
+
+wire [9:0] brick1_x = 400 - 32; //middle is 320 -32
+wire [9:0] brick1_y = 60;
+
+
+wire w_video_on, w_p_tick;
+wire [9:0] w_x, w_y;
+reg [11:0] rgb_reg;
+wire[11:0] rgb_next;
+
+reg hit; //for score
     
+vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
+                      .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
+pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
+                        .x(w_x), .y(w_y), .rgb(rgb_next),
+                        .board_x(board_x), 
+                        .board_y(board_y),
+                        .brick_x(brick1_x), 
+                        .brick_y(brick1_y),
+                        .collision(hit));
+    
+always @(posedge clk) begin
+        if(w_p_tick)
+            rgb_reg <= rgb_next;
+end
+            
+ assign rgb = rgb_reg;
+
+
+
 /******* SCORE COUNTING ********/
-wire hit = 0;
+
 score score(
     .clk(clk),
     .reset(rst),
@@ -118,78 +170,6 @@ seven no_value(
       .seven_seg_display(no_val)
 );
 
-// Board position parameters to center the board
-wire [9:0] board_x_init = 320 - 32; // 640/2 - 64/2
-wire [9:0] board_y = 300 - 4;  // 480/2 - 8/2
-
-wire [9:0] board_x;
-
-board paddle(
-    .clk(boardhz),
-    .reset(reset),
-    .move_left(left),
-    .move_right(right),
-    .x_initial(board_x),
-    .y_initial(board_y),
-
-    .start_out(beginning_of_game),
-    .x_pos(board_x)
-);
-
-wire [9:0] ball_x;
-wire [9:0] ball_y;
-
-//ball ball(
-//    .clk(clk),
-//    .reset(rst),
-//    .pause(paus),
-//    .x_initial(board_x_init)  
-//);
-
-wire [9:0] brick1_x = 400 - 32; //middle is 320 -32
-wire [9:0] brick1_y = 60;
-//bricks brick(
-//    .clk(clk),
-//    .reset(rst),
-//    .x_pos(brick1_x),
-//    .y_pos(brick1_y)
-//);
-
-// VGA controller
-// display U3(
-//     .dclk(dclk),
-//     .rst(rst),
-//     .board_x(board_x),
-//     .board_y(board_y),
-//     .brick_x(brick1_x),
-//     .brick_y(brick1_y),
-//     .hsync(hsync),
-//     .vsync(vsync),
-//     .red(red),
-//     .green(green),
-//     .blue(blue)
-//     );
-
-wire w_video_on, w_p_tick;
-wire [9:0] w_x, w_y;
-reg [11:0] rgb_reg;
-wire[11:0] rgb_next;
-    
-vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
-                      .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
-pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
-                        .x(w_x), .y(w_y), .rgb(rgb_next),
-                        .board_x(board_x), 
-                        .board_y(board_y),
-                        .brick_x(brick1_x), 
-                        .brick_y(brick1_y));
-    
-always @(posedge clk) begin
-        if(w_p_tick)
-            rgb_reg <= rgb_next;
-end
-            
- assign rgb = rgb_reg;
     
     
 /***** DISPLAY SCORE ******/
