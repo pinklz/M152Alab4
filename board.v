@@ -71,11 +71,11 @@ always @(posedge clk) begin
         if (!pause) begin
                // Move paddle left
                if (move_left ) begin//&& current_x-1 > left_limit) begin
-                   x_pos <= x_pos - 2; // Decrease x_pos to move left
+                   x_pos <= x_pos - 1; // Decrease x_pos to move left
                end
                // Move paddle right
                else if (move_right) begin// && current_x+1 < right_limit) begin
-                   x_pos <= x_pos + 2; // Increase x_pos to move right
+                   x_pos <= x_pos + 1; // Increase x_pos to move right
                end
            end else begin
                x_pos <= x_pos;
