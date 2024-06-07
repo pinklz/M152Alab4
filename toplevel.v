@@ -102,8 +102,23 @@ wire [9:0] ball_x;
 wire [9:0] ball_y;
 
 
-wire [9:0] brick1_x = 400 - 32; //middle is 320 -32
+wire [9:0] brick1_x = 40 - 32; //middle is 320 -32
 wire [9:0] brick1_y = 60;
+
+wire [9:0] brick2_x = 80 - 32; //middle is 320 -32
+wire [9:0] brick2_y = 60;
+
+wire [9:0] brick3_x = 120 - 32; //middle is 320 -32
+wire [9:0] brick3_y = 60;
+
+wire [9:0] brick4_x = 160 - 32; //middle is 320 -32
+wire [9:0] brick4_y = 60;
+
+wire [9:0] brick5_x = 200 - 32; //middle is 320 -32
+wire [9:0] brick5_y = 60;
+
+wire [9:0] brick6_x = 240 - 32; //middle is 320 -32
+wire [9:0] brick6_y = 60;
 
 
 wire w_video_on, w_p_tick;
@@ -111,7 +126,7 @@ wire [9:0] w_x, w_y;
 reg [11:0] rgb_reg;
 wire[11:0] rgb_next;
 
-reg hit; //for score
+//reg hit; //for score
     
 vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
                       .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
@@ -119,9 +134,19 @@ pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on),
                         .x(w_x), .y(w_y), .rgb(rgb_next),
                         .board_x(board_x), 
                         .board_y(board_y),
-                        .brick_x(brick1_x), 
-                        .brick_y(brick1_y),
-                        .collision(hit));
+                        .brick_x0(brick1_x), 
+                        .brick_y0(brick1_y),
+                        .brick_x1(brick2_x),
+                        .brick_y1(brick2_y),
+                        .brick_x2(brick3_x),
+                        .brick_y2(brick3_y),
+                        .brick_x3(brick4_x),
+                        .brick_y3(brick4_y),
+                        .brick_x4(brick5_x),
+                        .brick_y4(brick5_y),
+                        .brick_x5(brick6_x),
+                        .brick_y5(brick6_y));
+                        //.collision(hit));
     
 always @(posedge clk) begin
         if(w_p_tick)
