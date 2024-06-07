@@ -104,22 +104,22 @@ wire [9:0] ball_x;
 wire [9:0] ball_y;
 
 
-wire [9:0] brick1_x = 40 - 32; //middle is 320 -32
+wire [9:0] brick1_x = 70 - 32; //middle is 320 -32
 wire [9:0] brick1_y = 60;
 
-wire [9:0] brick2_x = 80 - 32; //middle is 320 -32
+wire [9:0] brick2_x = 170 - 32; //middle is 320 -32
 wire [9:0] brick2_y = 60;
 
-wire [9:0] brick3_x = 120 - 32; //middle is 320 -32
+wire [9:0] brick3_x = 270 - 32; //middle is 320 -32
 wire [9:0] brick3_y = 60;
 
-wire [9:0] brick4_x = 160 - 32; //middle is 320 -32
+wire [9:0] brick4_x = 370 - 32; //middle is 320 -32
 wire [9:0] brick4_y = 60;
 
-wire [9:0] brick5_x = 200 - 32; //middle is 320 -32
+wire [9:0] brick5_x = 470 - 32; //middle is 320 -32
 wire [9:0] brick5_y = 60;
 
-wire [9:0] brick6_x = 240 - 32; //middle is 320 -32
+wire [9:0] brick6_x = 570 - 32; //middle is 320 -32
 wire [9:0] brick6_y = 60;
 
 

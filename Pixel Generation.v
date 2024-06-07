@@ -23,10 +23,10 @@ module pixel_generation(
     output wire [3:0] ones
 );
 
-    reg [3:0] onescnt;
-    reg [3:0] tenscnt;
-    reg [3:0] hunscnt;
-    reg [3:0] thouscnt;
+    wire [3:0] onescnt;
+    wire [3:0] tenscnt;
+    wire [3:0] hunscnt;
+    wire [3:0] thouscnt;
 
     parameter X_MAX = 639;                  // right border of display area
     parameter Y_MAX = 479;                  // bottom border of display area
@@ -134,8 +134,8 @@ module pixel_generation(
     // Ball direction control
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            ball_x_reg <= 0;
-            ball_y_reg <= 0;
+            ball_x_reg <= 320 - 32;
+            ball_y_reg <= 280;
             ball_x_delta_reg <= 1'b1;
             ball_y_delta_reg <= 1'b1;
         end else begin
@@ -210,18 +210,21 @@ module pixel_generation(
             ball_x_next = ball_x_reg + x_delta;
             ball_y_next = ball_y_reg + y_delta;
 
-            score score(
-                .clk(clk),
-                .reset(reset),
-                .collision(collision),
 
-                .thous(thouscnt),
-                .huns(hunscnt),
-                .tens(tenscnt),
-                .ones(onescnt)
-            )
         end
     end
+
+
+score score(
+        .clk(clk),
+        .reset(reset),
+        .collision(collision),
+
+        .thous(thouscnt),
+        .huns(hunscnt),
+        .tens(tenscnt),
+        .ones(onescnt)
+    );
 
     assign ones = onescnt;
     assign tens = tenscnt;
