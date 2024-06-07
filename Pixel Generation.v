@@ -3,6 +3,7 @@
 module pixel_generation(
     input clk,                              // 100MHz from Basys 3
     input reset,                            // btnC
+    input pause,
     input video_on,                         // from VGA controller
     input [9:0] x, y,                       // from VGA controller
     output reg [11:0] rgb,                  // to DAC, to VGA controller
@@ -150,7 +151,7 @@ module pixel_generation(
         ball_y_delta_next = ball_y_delta_reg;
         collision = 0;
 
-        if (refresh_tick) begin
+        if (refresh_tick && !pause) begin
             // check boundary
             if (ball_x_r >= X_MAX)
                 ball_x_delta_next = 1'b0; // moving to the left
