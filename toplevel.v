@@ -5,6 +5,7 @@ module toplevel(
     input wire rst,           // right-most pushbutton for reset
     input wire l,       // move left button
     input wire r,       // move right button
+    input pause,
     
 //    output wire [2:0] red,    // red vga output - 3 bits
 //    output wire [2:0] green,  // green vga output - 3 bits
@@ -89,6 +90,7 @@ wire [9:0] board_x;
 board paddle(
     .clk(boardhz),
     .reset(reset),
+    .pause(pause),
     .move_left(left),
     .move_right(right),
     .x_initial(board_x),
@@ -130,7 +132,7 @@ wire[11:0] rgb_next;
     
 vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
                       .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
-pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on), 
+pixel_generation pg(.clk(clk), .reset(rst), .pause(pause), .video_on(w_video_on), 
                         .x(w_x), .y(w_y), .rgb(rgb_next),
                         .board_x(board_x), 
                         .board_y(board_y),
