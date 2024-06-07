@@ -15,8 +15,17 @@ module pixel_generation(
     input [9:0] brick_x4, brick_y4,
     input [9:0] brick_x5, brick_y5,
 
-    output reg collision
+    output reg collision,
+    output wire [3:0] thous,
+    output wire [3:0] huns,
+    output wire [3:0] tens,
+    output wire [3:0] ones
 );
+
+    reg [3:0] onescnt;
+    reg [3:0] tenscnt;
+    reg [3:0] hunscnt;
+    reg [3:0] thouscnt;
 
     parameter X_MAX = 639;                  // right border of display area
     parameter Y_MAX = 479;                  // bottom border of display area
@@ -199,8 +208,24 @@ module pixel_generation(
             // update ball position
             ball_x_next = ball_x_reg + x_delta;
             ball_y_next = ball_y_reg + y_delta;
+
+            score score(
+                .clk(clk),
+                .reset(reset),
+                .collision(collision),
+
+                .thous(thouscnt),
+                .huns(hunscnt),
+                .tens(tenscnt),
+                .ones(onescnt)
+            )
         end
     end
+
+    assign ones = onescnt;
+    assign tens = tenscnt;
+    assign huns = hunscnt;
+    assign thous = thouscnt;
 
     // VIDEO ON/OFF
     always @* begin

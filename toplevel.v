@@ -145,7 +145,14 @@ pixel_generation pg(.clk(clk), .reset(rst), .video_on(w_video_on),
                         .brick_x4(brick5_x),
                         .brick_y4(brick5_y),
                         .brick_x5(brick6_x),
-                        .brick_y5(brick6_y));
+                        .brick_y5(brick6_y),
+                        .thous(thouscnt),
+                        .huns(hunscnt),
+                        .tens(tenscnt),
+                        .ones(onescnt)
+                        
+                        
+                        );
                         //.collision(hit));
     
 always @(posedge clk) begin
@@ -159,15 +166,15 @@ end
 
 /******* SCORE COUNTING ********/
 
-score score(
-    .clk(clk),
-    .reset(rst),
-    .collision(hit),
-    .thous(thouscnt),
-    .huns(hunscnt),
-    .tens(tenscnt),
-    .ones(onescnt)
-);
+// score score(
+//     .clk(clk),
+//     .reset(rst),
+//     .collision(hit),
+//     .thous(thouscnt),
+//     .huns(hunscnt),
+//     .tens(tenscnt),
+//     .ones(onescnt)
+// );
     
 seven thousand(
        .dig(thouscnt),
