@@ -28,39 +28,6 @@ wire [9:0] left_limit = 0;
 wire [9:0] right_limit = screen_width - paddle_width;
 
 
-//// Process to handle start and reset signals
-//always @(posedge clk) begin
-//    if (reset || start) begin
-//        x_pos <= x_initial;
-//        s <= start;
-//    end else begin
-//        if (move_left || move_right) begin
-//            s <= 0;
-//            start <= 0;
-//        end
-//    end
-//end
-
-//// Process to move the paddle
-//always @(posedge move_clk) begin
-//    //if (!reset && !pause && !start) begin
-//        // Move paddle left
-//        s <= 0;    // Begin game
-//                if (!pause) begin
-//                   // Move paddle left
-//                   if (move_left ) begin//&& current_x-1 > left_limit) begin
-//                       x_pos <= x_pos - 1; // Decrease x_pos to move left
-//                   end
-//                   // Move paddle right
-//                   else if (move_right) begin// && current_x+1 < right_limit) begin
-//                       x_pos <= x_pos + 1; // Increase x_pos to move right
-//                   end
-//               end else begin
-//                   x_pos <= x_pos;
-//               end
-//    //end
-//end
-
 
 always @(posedge clk) begin
     if (reset || start) begin

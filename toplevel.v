@@ -6,14 +6,10 @@ module toplevel(
     input wire l,       // move left button
     input wire r,       // move right button
     input pause,
-    
-//    output wire [2:0] red,    // red vga output - 3 bits
-//    output wire [2:0] green,  // green vga output - 3 bits
-//    output wire [2:0] blue,   // blue vga output - 3 bits
+
     output wire hsync,        // horizontal sync out
     output wire vsync,         // vertical sync out
 
-    //TRYING OUT NEW DISPLAY
     output [11:0] rgb,       // to DAC, 3 bits to VGA port on Basys 3
 
     
@@ -33,12 +29,6 @@ module toplevel(
     wire [3:0] thouscnt;
     wire [3:0] novalue = 4'b1111;
     
-    // TODO: use score module to set sec0, sec1, min0, min1cnt 's
-    
-    //self-note: board
-        // Put button input after debouncing into board.v
-        // use board.v to output the x y coords of board
-        // which are used as input to display
 
     wire reset;
     wire paus;
@@ -128,7 +118,7 @@ wire [9:0] w_x, w_y;
 reg [11:0] rgb_reg;
 wire[11:0] rgb_next;
 
-//reg hit; //for score
+
     
 vga_controller vc(.clk_100MHz(clk), .reset(rst), .video_on(w_video_on), .hsync(hsync), 
                       .vsync(vsync), .p_tick(w_p_tick), .x(w_x), .y(w_y));
@@ -165,18 +155,6 @@ end
  assign rgb = rgb_reg;
 
 
-
-/******* SCORE COUNTING ********/
-
-// score score(
-//     .clk(clk),
-//     .reset(rst),
-//     .collision(hit),
-//     .thous(thouscnt),
-//     .huns(hunscnt),
-//     .tens(tenscnt),
-//     .ones(onescnt)
-// );
     
 seven thousand(
        .dig(thouscnt),
